@@ -1,0 +1,35 @@
+pipeline{
+    agent  any
+    tools {
+  maven 'MAVEN_HOME'
+}
+
+    stages{
+        stage('checkout'){
+            steps{
+                git 'https://github.com/shubhamsatpute2023/webapp.git'
+            }
+        }
+        stage('build'){
+            steps{
+                sh "mvn clean package"
+            sh "mv target/*.war target/myweb.war"
+            }
+        }
+        stage('dockerbuild'){
+            steps{
+                sh 'docker build -t new .'
+            }
+        }
+        
+    stage('Run Docker container on Jenkins Agent') {
+             
+            steps 
+   {
+                sh "docker container run -d -p 8004:8080 new"
+ 
+            }
+        }
+    }
+    
+}
